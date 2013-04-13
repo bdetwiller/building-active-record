@@ -1,6 +1,8 @@
 require 'debugger'
 
 class SQLObject < MassObject
+	extend Searchable
+	extend Associatable
 
 	def self.set_table_name(name)
 		@tablename = name
@@ -16,9 +18,7 @@ class SQLObject < MassObject
 			FROM #{self.table_name}
 			SQL
 
-		results.map do |result|
-		 self.new(result)
-		end
+		parse_all(results)
 	end
 
 	def self.find(id)
@@ -51,11 +51,12 @@ class SQLObject < MassObject
 
 		set_line = self.class.attributes.map do |attribute|
 			"#{attribute} = ?"  
-		end
+		end.join(", ")
 
 		DBConnection.execute(<<-SQL, *attribute_values)
-			UPDATE #{self.table_name}
-			SET set_line.join(", ")
+			UPDATE #{self.class.table_name}
+			SET #{set_line}
+			WHERE id = #{self.id}
 		SQL
 	end
 

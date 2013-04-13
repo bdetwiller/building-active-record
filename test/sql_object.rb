@@ -22,6 +22,7 @@ p Cat.find(2)
 p Human.all
 p Cat.all
 
+
 c = Cat.new(:name => "Gizmo", :owner_id => 1)
 c.save
 

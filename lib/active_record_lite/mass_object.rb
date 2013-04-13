@@ -19,6 +19,12 @@ class MassObject
 		end
 	end
 
+	def self.parse_all(objects)
+		objects.map do |object|
+			self.new(object)
+		end
+	end
+
 end
 
 
